@@ -10,6 +10,8 @@ import importlib.util
 
 from lerobot.common.datasets.lerobot_dataset import LeRobotDataset
 
+from crane_fk import calposition
+
 class RosbagToLeRobot:
     def __init__(self, bag_dir, output_dir, config_path, target_freq=None):
         self.bag_path = Path(bag_dir).resolve()
@@ -137,7 +139,7 @@ class RosbagToLeRobot:
                 arm_cmds = messages['/crane_plus_arm_controller/joint_trajectory']
                 gripper_cmds = messages['/crane_plus_gripper_controller/joint_trajectory']
                 j_times = np.array([ts for _, ts in joint_states])
-                j_pos = np.array([msg.position for msg, _ in joint_states])
+                j_pos = np.array([np.concatenate([msg.position, calposition(msg.position)]) for msg, _ in joint_states])
                 a_times = np.array([ts for _, ts in arm_cmds])
                 a_pos = np.array([msg.points[0].positions if msg.points else [0,0,0,0] for msg, _ in arm_cmds])
                 g_times = np.array([ts for _, ts in gripper_cmds])
@@ -148,7 +150,7 @@ class RosbagToLeRobot:
                 num_frames = episode_lengths[idx]
                 target_times = np.linspace(start_time, end_time, num_frames)
                 # Sample and hold for each
-                j_pos_sampled = self._sample_and_hold(j_times, j_pos, target_times)  # (num_frames, 5)
+                j_pos_sampled = self._sample_and_hold(j_times, j_pos, target_times)  # (num_frames, 8)
                 a_pos_sampled = self._sample_and_hold(a_times, a_pos, target_times)  # (num_frames, 4)
                 g_pos_sampled = self._sample_and_hold(g_times, g_pos, target_times)  # (num_frames,)
                 # Concatenate after sampling

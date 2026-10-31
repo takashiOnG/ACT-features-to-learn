@@ -9,6 +9,8 @@ import numpy as np
 
 from lerobot.common.policies.act.modeling_act import ACTPolicy
 
+from crane_fk import calposition
+
 ARM_JOINT_NAMES = ['crane_plus_joint1', 'crane_plus_joint2', 'crane_plus_joint4', 'crane_plus_joint3']
 GRIPPER_JOINT_NAME = 'crane_plus_joint_hand'
 
@@ -38,8 +40,8 @@ class InferenceNode(Node):
             return
         # Prepare observation dict for ACTPolicy
         obs = {
-            'observation.state': torch.tensor(self.latest_joint_state, dtype=torch.float32).unsqueeze(0),  # (1, 5)
-            'observation.environment_state': torch.tensor(self.latest_joint_state, dtype=torch.float32).unsqueeze(0),  # (1, 5)
+            'observation.state': torch.tensor(np.concatenate([self.latest_joint_state,calposition(self.latest_joint_state)]), dtype=torch.float32).unsqueeze(0),  # (1, 8)
+            'observation.environment_state': torch.tensor(np.concatenate([self.latest_joint_state, calposition(self.latest_joint_state)]), dtype=torch.float32).unsqueeze(0),  # (1, 8)
         }
         with torch.no_grad():
             action = self.policy.select_action(obs).cpu().numpy().flatten()  # (5,)

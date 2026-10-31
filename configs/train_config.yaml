@@ -1,6 +1,6 @@
-dataset_root: "/home/ubuntu/dataset/lerobot_dataset/crane_plus_pekori_and_kururi"
-repo_id: "crane_plus_pekori"
-output_directory: "/home/ubuntu/checkpoints/train/crane_plus_pekori_and_kururi_act"
+dataset_root: "/home/ubuntu/dataset/lerobot_dataset/crane_plus_pekori_and_kururi20_EE2"
+repo_id: "crane_plus_pekori_and_kururi20_EE2"
+output_directory: "/home/ubuntu/checkpoints/train/crane_plus_pekori_and_kururi20_act_EE2"
 config_path: "configs/crane_features.py"
 
 device: "cpu"

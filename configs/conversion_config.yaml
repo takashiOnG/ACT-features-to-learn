@@ -1,4 +1,4 @@
 bag_dir: "/home/ubuntu/dataset/rosbags/pekori_and_kururi"
-output_dir: "/home/ubuntu/dataset/lerobot_dataset/crane_plus_pekori_and_kururi"
+output_dir: "/home/ubuntu/dataset/lerobot_dataset/crane_plus_pekori_and_kururi20_EE2"
 config: "configs/crane_features.py"
 target_freq: 20
